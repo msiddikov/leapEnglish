@@ -51,3 +51,49 @@ exports.signin = async (req, res, next) => {
     });
   }
 };
+
+exports.protect = async (req, res, next) => {
+  try {
+    let token;
+
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.slice(7);
+    } else {
+      throw new Error("you are not authorizated");
+    }
+
+    if (!token) throw new Error("You not authorized");
+
+    const tekshir = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (!tekshir) throw new Error("Your token expired");
+
+    const user = await User.findByPk(tekshir.id);
+    if (!user) throw new Error("This user not exist");
+    req.user = user;
+    next();
+  } catch (error) {
+    console.log(error.message);
+    res.status(404).json({
+      idOk: false,
+      data: "",
+      message: error.message,
+    });
+  }
+};
+
+exports.role = (roles) => {
+  return async (req, res, next) => {
+    try {
+      // 1) User ni roleni olamiz databasedan, tekshiramiz
+      if (!roles.includes(req.user.role)) {
+        return next(new AppError("You don't access this process", 401));
+      }
+      next();
+    } catch (error) {
+      console.log(1111);
+    }
+  };
+};
