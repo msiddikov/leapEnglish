@@ -44,6 +44,7 @@ const User = sequelize.define(
       },
     },
     access: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+    addition: { type: DataTypes.STRING },
   },
   {
     indexes: [
