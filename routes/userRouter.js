@@ -6,6 +6,10 @@ router.route("/signin").post(authController.signin);
 router.route("/signup").post(authController.signup);
 
 router
+  .route("/self")
+  .get(authController.protect, controller.getMe, controller.getOneUser);
+
+router
   .route("/")
   .get(
     authController.protect,
