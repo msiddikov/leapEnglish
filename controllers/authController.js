@@ -37,7 +37,7 @@ exports.signin = async (req, res, next) => {
     if (!user) throw new Error("Wrong Email or password");
     const check = bcrypt.compare(password, user.password);
     if (!check) throw new Error("Wrong Email or password");
-
+    const accessToken = createJwt(user.id);
     res.status(200).json({
       isOk: true,
       data: { user, accessToken },
@@ -55,7 +55,7 @@ exports.signin = async (req, res, next) => {
 exports.protect = async (req, res, next) => {
   try {
     let token;
-
+    console.log(req.headers);
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -67,7 +67,7 @@ exports.protect = async (req, res, next) => {
 
     if (!token) throw new Error("You not authorized");
 
-    const tekshir = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const tekshir = jwt.verify(token, "leapengish_good");
     if (!tekshir) throw new Error("Your token expired");
 
     const user = await User.findByPk(tekshir.id);
@@ -77,7 +77,7 @@ exports.protect = async (req, res, next) => {
   } catch (error) {
     console.log(error.message);
     res.status(404).json({
-      idOk: false,
+      isOk: false,
       data: "",
       message: error.message,
     });
