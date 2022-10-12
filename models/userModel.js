@@ -45,6 +45,11 @@ const User = sequelize.define(
     },
     access: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     addition: { type: DataTypes.STRING, defaultValue: "" },
+    level: { type: DataTypes.STRING, defaultValue: "" },
+    group: { type: DataTypes.STRING, allowNull: true },
+    test: { type: DataTypes.BOOLEAN, defaultValue: false },
+    testLevel: { type: DataTypes.STRING, allowNull: true },
+    link: { type: DataTypes.STRING, defaultValue: "" },
   },
   {
     indexes: [
