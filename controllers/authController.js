@@ -41,7 +41,14 @@ exports.signin = async (req, res, next) => {
     const accessToken = createJwt(user.id);
     res.status(200).json({
       isOk: true,
-      data: { user, accessToken },
+      data: {
+        user: {
+          full_name: user.full_name,
+          email: user.email,
+          createdAt: user.createdAt,
+        },
+        accessToken,
+      },
       message: "Successfull login",
     });
   } catch (error) {
