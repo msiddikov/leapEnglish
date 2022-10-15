@@ -35,6 +35,7 @@ exports.signin = async (req, res, next) => {
 
     const user = await User.findOne({ where: { email } });
     if (!user) throw new Error("Wrong Email or password");
+    if (!user.accept) throw new Error("You are not accepted by admin");
     const check = bcrypt.compare(password, user.password);
     if (!check) throw new Error("Wrong Email or password");
     const accessToken = createJwt(user.id);
