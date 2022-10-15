@@ -52,7 +52,7 @@ exports.getOneGroup = async (req, res, next) => {
   }
 };
 
-exports.getOneGroup = async (req, res, next) => {
+exports.updateGroup = async (req, res, next) => {
   try {
     const group = await Group.update(req.body, {
       where: { id: req.params.id },
