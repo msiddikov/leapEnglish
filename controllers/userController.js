@@ -1,5 +1,5 @@
 const User = require("../models/userModel");
-
+const bcrypt = require("bcryptjs");
 exports.getAllUser = async (req, res, next) => {
   try {
     const users = await User.findAll({ limit: 20 });
@@ -56,11 +56,17 @@ exports.getOneUser = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.update(req.body, {
-      where: { id },
-      returning: true,
-      plain: true,
-    });
+    const { full_name, email, password, role } = req.body;
+
+    const user = await User.findByPk(id);
+    user.full_name = full_name || user.full_name;
+    user.email = email || user.email;
+    if (role === "admin") {
+      user.role = "admin";
+      user.access = true;
+    }
+
+    await user.save();
     res.status(200).json({
       isOk: true,
       data: { user },
