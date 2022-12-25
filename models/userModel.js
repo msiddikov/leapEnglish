@@ -47,21 +47,15 @@ const User = sequelize.define(
     addition: { type: DataTypes.STRING, defaultValue: "" },
     level: { type: DataTypes.STRING, defaultValue: "" },
     test: { type: DataTypes.BOOLEAN, defaultValue: false },
-    testLevel: { type: DataTypes.STRING, allowNull: true },
+    testLevel: { type: DataTypes.STRING, allowNull: true, defaultValue: "" },
     link: { type: DataTypes.STRING, defaultValue: "" },
   },
-  {
-    indexes: [
-      {
-        unique: true,
-        fields: ["email"],
-      },
-    ],
-  }
+  { indexes: [{ unique: true, fields: ["email"] }] }
 );
 
 User.beforeCreate(async (user, options) => {
   const hashedPassword = await bcrypt.hash(user.password, 12);
   user.password = hashedPassword;
 });
+
 module.exports = User;
