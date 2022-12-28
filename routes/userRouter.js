@@ -21,6 +21,7 @@ router
     authController.role(["admin"]),
     controller.addUser
   );
+
 router
   .route("/:id")
   .get(

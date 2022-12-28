@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+
 exports.getAllUser = async (req, res, next) => {
   try {
     const users = await User.findAll({ limit: 20 });
@@ -38,7 +39,9 @@ exports.addUser = async (req, res, next) => {
 exports.getOneUser = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      attributes: { exclude: ["password"] },
+    });
     res.status(200).json({
       isOk: true,
       data: user,

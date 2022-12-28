@@ -53,6 +53,7 @@ exports.signin = async (req, res, next) => {
           full_name: user.full_name,
           email: user.email,
           role: user.role,
+          groupId: user.groupId,
           createdAt: user.createdAt,
         },
         accessToken,
@@ -60,11 +61,7 @@ exports.signin = async (req, res, next) => {
       message: "Successfull login",
     });
   } catch (error) {
-    res.status(404).json({
-      isOk: false,
-      message: error.message,
-      data: "",
-    });
+    res.status(404).json({ isOk: false, message: error.message, data: "" });
   }
 };
 
@@ -90,12 +87,7 @@ exports.protect = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.log(error.message);
-    res.status(404).json({
-      isOk: false,
-      data: "",
-      message: error.message,
-    });
+    res.status(404).json({ isOk: false, data: "", message: error.message });
   }
 };
 
@@ -104,11 +96,20 @@ exports.role = (roles) => {
     try {
       // 1) User ni roleni olamiz databasedan, tekshiramiz
       if (!roles.includes(req.user.role)) {
-        return next(new AppError("You don't access this process", 401));
+        throw new Error("You don't access this process");
       }
       next();
     } catch (error) {
-      console.log(1111);
+      res.status(404).json({ isOk: false, data: "", message: error.message });
     }
   };
+};
+
+exports.accessCheck = async (req, res, next) => {
+  try {
+    if (!req.user.access) throw new Error("You don't access this process");
+    next();
+  } catch (error) {
+    res.status(404).json({ isOk: false, data: "", message: error.message });
+  }
 };
