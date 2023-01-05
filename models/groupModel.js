@@ -12,4 +12,8 @@ const Group = sequelize.define("groups", {
 Group.hasMany(User, { as: "group" });
 User.belongsTo(Group, { as: "group" });
 
+const queryInterface = sequelize.getQueryInterface();
+
+queryInterface.changeColumn("groups", "link", { type: DataTypes.TEXT });
+
 module.exports = Group;
